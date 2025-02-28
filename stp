@@ -1,0 +1,21 @@
+ public async Task<List<Mtto_reporte_mantenimiento_SP_VM>> UspAD_ConsultaReporteMantenimiento(string FechaInicio, string FechaFinal, int TipoPoOrden, int IdTaller, int IdUnidad)
+        {
+            List<Mtto_reporte_mantenimiento_SP_VM> entities = new List<Mtto_reporte_mantenimiento_SP_VM>();
+
+            try
+            {
+                entities = await _db.Mtto_reporte_mantenimiento_SP_VM.FromSqlRaw($"uspAD_ConsultaReporteMantenimiento  '{FechaInicio}', '{FechaFinal}',{TipoPoOrden},{IdTaller}, {IdUnidad}").ToListAsync();
+
+            }
+            catch (Exception exception)
+            {
+                GenericResponse entityResponse = new GenericResponse
+
+                {
+                    Result = false,
+                    MessageError = exception.Message
+                };
+            }
+
+            return entities;
+        }
