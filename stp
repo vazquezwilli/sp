@@ -19,3 +19,7 @@
 
             return entities;
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+
+            builder.Entity<Inv_reporte_propio_consignacion_SP_VM>().HasNoKey();
