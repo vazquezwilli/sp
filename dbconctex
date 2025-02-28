@@ -1,0 +1,863 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations.Schema;
+using Transporte.Common;
+using Transporte.Models.EntitiesDb;
+using Transporte.Models.ViewModel;
+using Transporte.Models.Identity;
+using static Transporte.Common.Enums;
+
+namespace Transporte.Data
+{
+    public class ApplicationDbContext : IdentityDbContext
+    {
+        private static readonly LoggerFactory _loggerContext = new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
+        private string _connectionString;
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+            var extensionConnection = options.FindExtension<SqlServerOptionsExtension>();
+            _connectionString = extensionConnection.ConnectionString;
+        }
+
+        #region MANTENIMIENTO
+        public DbSet<Mtto_cat_acciones> Mtto_cat_acciones { get; set; }
+        public DbSet<Mtto_cat_categoria_personal_taller> Mtto_cat_categoria_personal_taller { get; set; }
+        public DbSet<Mtto_cat_estado_unidad> Mtto_cat_estado_unidad { get; set; }
+        public DbSet<Mtto_cat_estatus_orden> Mtto_cat_estatus_orden { get; set; }
+        public DbSet<Mtto_cat_estatus_unidad> Mtto_cat_estatus_unidad { get; set; }
+        public DbSet<Mtto_cat_marca_unidad> Mtto_cat_marca_unidad { get; set; }
+        public DbSet<Mtto_cat_personal_taller> Mtto_cat_personal_taller { get; set; }
+        public DbSet<Mtto_cat_taller> Mtto_cat_taller { get; set; }
+        public DbSet<Mtto_cat_tipo_combustible> Mtto_cat_tipo_combustible { get; set; }
+        public DbSet<Mtto_cat_tipo_motor> Mtto_cat_tipo_motor { get; set; }
+        public DbSet<Mtto_cat_tipo_unidad> Mtto_cat_tipo_unidad { get; set; }
+        public DbSet<Mtto_razon_reparacion> Mtto_razon_reparacion { get; set; }
+        public DbSet<Mtto_cat_tipo_ciclo> Mtto_cat_tipo_ciclo { get; set; }
+        public DbSet<Mtto_unidad> Mtto_unidad { get; set; }
+        public DbSet<Mtto_orden> Mtto_orden { get; set; }
+        public DbSet<Mtto_cat_accion_componente> Mtto_cat_accion_componente { get; set; }
+        public DbSet<Mtto_componente> Mtto_componente { get; set; }
+        public DbSet<Mtto_servicio> Mtto_servicio { get; set; }
+        public DbSet<Mtto_servicio_componente> Mtto_servicio_componente { get; set; }
+        public DbSet<Mtto_ciclo> Mtto_ciclo { get; set; }
+        public DbSet<Mtto_ciclo_servicio> Mtto_ciclo_servicio { get; set; }
+        public DbSet<Mtto_iteracion> Mtto_iteracion { get; set; }
+        public DbSet<Mtto_iteracion_servicio> Mtto_iteracion_servicio { get; set; }
+        public DbSet<Mtto_cat_flotilla> Mtto_cat_flotilla { get; set; }
+        public DbSet<Mtto_cat_localidad> Mtto_cat_localidad { get; set; }
+        public DbSet<Mtto_cat_tipo_orden> Mtto_cat_tipo_orden { get; set; }
+        public DbSet<Mtto_orden_detalle> Mtto_orden_detalle { get; set; }
+        public DbSet<Mtto_componente_factura> Mtto_componente_factura { get; set; }
+        public DbSet<Mtto_cat_estatus_documento> Mtto_cat_estatus_documento { get; set; }
+        public DbSet<Mtto_unidad_historial> Mtto_unidad_historial { get; set; }
+        public DbSet<Mtto_cat_carrier> Mtto_cat_carrier { get; set; }
+
+
+
+
+
+
+
+        #endregion
+
+        #region INVENTARIOS
+        public DbSet<Inv_articulo> Inv_articulo { get; set; }
+        public DbSet<Inv_cat_almacen> Inv_cat_almacen { get; set; }
+        public DbSet<Inv_familia> Inv_familia { get; set; }
+        public DbSet<Inv_insumo> Inv_insumo { get; set; }
+        public DbSet<Inv_sub_familia> Inv_sub_familia { get; set; }
+        public DbSet<Inv_unidad_medida> Inv_unidad_medida { get; set; }
+        public DbSet<Inv_conceptos_costo> Inv_conceptos_costo { get; set; }
+        public DbSet<Inv_estado_insumo> Inv_estado_insumos { get; set; }
+        public DbSet<Inv_tipo_insumo> Inv_tipo_insumos { get; set; }
+        public DbSet<Inv_cat_tipo_entrada_reparar> Inv_cat_tipo_entrada_reparar { get; set; }
+        public DbSet<Inv_cat_estatus_entrada_reparar> Inv_cat_estatus_entrada_reparar { get; set; }
+        public DbSet<Inv_entrada_partes_reparar> Inv_entrada_partes_reparar { get; set; }
+        public DbSet<Inv_entrada_partes_reparar_detalle> Inv_entrada_partes_reparar_detalle { get; set; }
+        public DbSet<Inv_salida_partes_reparar> Inv_salida_partes_reparar { get; set; }
+        public DbSet<Inv_salida_partes_reparar_detalle> Inv_salida_partes_reparar_detalle { get; set; }
+
+
+        public DbSet<Inv_recepcion_orden_compra> Inv_recepcion_orden_compras { get; set; }
+        public DbSet<Inv_recepcion_orden_detalle> Inv_recepcion_orden_detalles { get; set; }
+        public DbSet<Inv_entrada_partes_reparadas> Inv_entrada_partes_reparadas { get; set; }
+        public DbSet<Inv_entrada_partes_reparadas_detalle_otros> Inv_entrada_partes_reparadas_detalle_otros { get; set; }
+
+        public DbSet<Inv_motivo_devolucion> Inv_motivo_devoluciones { get; set; }
+        public DbSet<Inv_devolucion_proveedores> Inv_devolucion_proveedores { get; set; }
+        public DbSet<Inv_devolucion_proveedor_detalle> Inv_devolucion_proveedor_detalle { get; set; }
+
+        public DbSet<Inv_cat_tipo_entrada_salida> Inv_cat_tipo_entrada_salida { get; set; }
+        public DbSet<Inv_maestro_movimientos> Inv_maestro_movimientos { get; set; }
+
+        public DbSet<Inv_requisicion_material> Inv_requisicion_material { get; set; }
+        public DbSet<Inv_requisicion_material_detalle> Inv_requisicion_material_detalle { get; set; }
+
+        public DbSet<Inv_orden_requisicion> Inv_orden_requisicion { get; set; }
+
+
+        public DbSet<Inv_cat_tipo_consumo> Inv_cat_tipo_consumos { get; set; }
+        public DbSet<Inv_recepcion_consumo_inmediato> Inv_recepcion_consumo_inmediatos { get; set; }
+        public DbSet<Inv_recepcion_consumo_inmediato_detalle> Inv_recepcion_consumo_inmediato_detalles { get; set; }
+        public DbSet<Inv_cat_tipo_recepcion_consumo> Inv_cat_tipo_recepcion_consumos { get; set; }
+        public DbSet<Inv_cat_estado_transferencia> Inv_cat_estado_transferencias { get; set; }
+        public DbSet<Inv_transferencia_salida_transferencia> Inv_transferencia_salida_transferencias { get; set; }
+        public DbSet<Inv_transferencia_salida_transferencia_detalle> Inv_transferencia_salida_transferencia_detalles { get; set; }
+
+        public DbSet<Inv_transferencia_entrada_transferencia> Inv_transferencia_entrada_transferencias { get; set; }
+        public DbSet<Inv_transferencia_entrada_transferencia_detalle> Inv_transferencia_entrada_transferencia_detalles { get; set; }
+
+        public DbSet<Inv_transferencia_devolucion_transferencia> Inv_transferencia_devolucion_transferencias { get; set; }
+        public DbSet<Inv_transferencia_devolucion_transferencia_detalle> Inv_transferencia_devolucion_transferencia_detalles { get; set; }
+
+
+        public DbSet<Inv_requisicion_devolucion_usuario> Inv_requisicion_devolucion_usuario { get; set; }
+        public DbSet<Inv_requisicion_devolucion_usuario_detalle> Inv_requisicion_devolucion_usuario_detalle { get; set; }
+
+        public DbSet<Inv_entrada_partes_consignacion> Inv_entrada_partes_consignacion { get; set; }
+        public DbSet<Inv_entrada_partes_consignacion_detalle> Inv_entrada_partes_consignacion_detalle { get; set; }
+        public DbSet<Inv_entrada_partes_consignacion_movimiento> Inv_entrada_partes_consignacion_movimiento { get; set; }
+
+        public DbSet<Inv_devolucion_a_consignatario> Inv_devolucion_a_consignatario { get; set; }
+        public DbSet<Inv_devolucion_a_consignatario_detalle> Inv_devolucion_a_consignatario_detalle { get; set; }
+        public DbSet<Inv_seguimiento_llantas> Inv_seguimiento_llantas { get; set; }
+
+
+
+        public DbSet<Inv_recepcion_consumo_inmediato_devolucion> Inv_recepcion_consumo_inmediato_devolucion { get; set; }
+        public DbSet<Inv_recepcion_consumo_inmediato_devolucion_detalles> Inv_recepcion_consumo_inmediato_devolucion_detalles { get; set; }
+
+        public DbSet<Inv_recepcion_orden_devolucion> Inv_recepcion_orden_devolucion { get; set; }
+        public DbSet<Inv_recepcion_orden_devolucion_detalle> Inv_recepcion_orden_devolucion_detalles { get; set; }
+
+        public DbSet<Inv_factura_consignacion> Inv_factura_consignacion { get; set; }
+        public DbSet<Inv_factura_consignacion_detalle> Inv_factura_consignacion_detalle { get; set; }
+
+        public DbSet<Inv_llantas_movimientos> Inv_llantas_movimientos { get; set; }
+        public DbSet<Inv_llantas_movimientos_historico> Inv_llantas_movimientos_historico { get; set; }
+
+
+        public DbSet<Inv_movimientos_contabilidad> Inv_movimientos_contabilidad { get; set; }
+        public DbSet<Inv_movimientos_contabilidad_documento> Inv_movimientos_contabilidad_documento { get; set; }
+        public DbSet<Inv_requisicion_combustible> Inv_requisicion_combustible { get; set; }
+        public DbSet<Inv_requisicion_combustible_detalle> Inv_requisicion_combustible_detalle { get; set; }
+        public DbSet<Inv_requisicion_combustible_devolucion> Inv_requisicion_combustible_devolucion { get; set; }
+        public DbSet<Inv_requisicion_combustible_devolucion_detalle> Inv_requisicion_combustible_devolucion_detalle { get; set; }
+
+        public DbSet<Inv_cat_gasolineras> Inv_cat_gasolineras { get; set; }
+        public DbSet<Inv_cat_medios_de_pago> Inv_cat_medios_de_pago { get; set; }
+        public DbSet<Inv_requisicion_dispersion_externa_combustible> Inv_requisicion_dispersion_externa_combustible { get; set; }
+
+        public DbSet<Inv_historico_propios_consignacion> Inv_historico_propios_consignacion { get; set; }
+        public DbSet<Inv_Reseteo_PowerSpec> Inv_Reseteo_PowerSpec { get; set; }
+        public DbSet<Inv_reseteo_davie4> Inv_reseteo_davie4 { get; set; }
+        public DbSet<Inv_historico_requisicion_gastos> Inv_historico_requisicion_gastos { get; set; }
+        public DbSet<Inv_cat_tipo_archivo_contabilidad> Inv_cat_tipo_archivos_contabilidad { get; set; }
+
+        public DbSet<Inv_cat_categoria_conceptos_costo> Inv_cat_catagoria_conceptos_costo { get; set; }
+        public DbSet<Inv_Inventario_almacen_maximos_minimos_historico> Inv_Inventario_almacen_maximos_minimos_historico { get; set; }
+        public DbSet<Inv_tracto> Inv_tracto { get; set; }
+        public DbSet<Inv_indicador_unidad> Inv_indicador_unidad { get; set; }
+        public DbSet<Inv_carga_inicial_reseteo_calculos> Inv_carga_inicial_reseteo_calculos { get; set; }
+        public DbSet<Inv_rango_m> Inv_rango_m { get; set; }
+        public DbSet<Inv_indicador_unidad_rango_m> Inv_indicador_unidad_rango_m { get; set; }
+        public DbSet<Inv_carga_inicial_rango_m_calculos> Inv_carga_inicial_rango_m_calculos { get; set; }
+
+        public DbSet<Inv_parametros_configuracion_combustible> Inv_parametros_configuracion_combustible { get; set; }
+        public DbSet<Inv_ajuste_negativo> Inv_ajuste_negativo { get; set; }
+        public DbSet<Inv_ajuste_negativo_detalle> Inv_ajuste_negativo_detalle { get; set; }
+        public DbSet<Inv_ajuste_positivo> Inv_ajuste_positivo { get; set; }
+        public DbSet<Inv_ajuste_positivo_detalle> Inv_ajuste_positivo_detalle { get; set; }
+
+        public DbSet<Inv_tipo_calificacion_FCE> Inv_tipo_calificacion_FCE { get; set; }
+        public DbSet<Inv_calificacion_unidad_configuracion> Inv_calificacion_unidad_configuracion { get; set; }
+        public DbSet<Inv_resumen_anual> Inv_resumen_anual { get; set; }
+
+        public DbSet<Inv_cat_servicio> Inv_cat_servicio { get; set; }
+        public DbSet<Inv_cat_spec> Inv_cat_spec { get; set; }
+        public DbSet<Inv_cat_tipo_spec> Inv_cat_tipo_spec { get; set; }
+
+
+        #endregion
+
+        #region COMPRAS
+
+        public DbSet<Compra_Tipo_Orden> Compras_Tipo_Orden { get; set; }
+        public DbSet<Compras_Libre_Bordo> Compras_Libre_Bordo { get; set; }
+        public DbSet<Compras_Condiciones_Pago> Compras_Condiciones_Pago { get; set; }
+        public DbSet<Compras_Tipo_Moneda> Compras_Tipo_Moneda { get; set; }
+        public DbSet<Compras_prioridades> Compras_prioridades { get; set; }
+        public DbSet<Compras_solicitud_estatus> Compras_solicitud_estatus { get; set; }
+        public DbSet<Compras_solicitud> Compras_solicitud { get; set; }
+        public DbSet<Compras_solicitud_detalles> Compras_solicitud_detalles { get; set; }
+        public DbSet<Compras_orden_compra> Compras_orden_compra { get; set; }
+        public DbSet<Compras_orden_detalles> Compras_orden_detalles { get; set; }
+        public DbSet<Compras_orden_estatus> Compras_orden_estatus { get; set; }
+
+        #endregion
+
+        #region ADMINISTRACION
+        public DbSet<Admin_centro_costo> Admin_centro_costo { get; set; }
+        public DbSet<Admin_cat_proveedores> Admin_cat_proveedores { get; set; }
+        public DbSet<Admin_periodo> Admin_periodo { get; set; }
+        public DbSet<Admin_mes> Admin_mes { get; set; }
+        public DbSet<Admin_cat_operadores> Admin_cat_operadores { get; set; }
+        public DbSet<Admin_correo_electronico_proveedores> Admin_correo_electronico_proveedores { get; set; }
+        public DbSet<Admin_cat_distribuidores> Admin_cat_distribuidores { get; set; }
+        public DbSet<Admin_proveedor_distribuidor> Admin_proveedor_distribuidor { get; set; }
+
+        public DbSet<Admin_configurar_avisos> Admin_configurar_avisos { get; set; }
+        public DbSet<Admin_configurar_avisos_detalle> Admin_configurar_avisos_detalle { get; set; }
+
+
+        #endregion
+
+        #region USUARIOS
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        #endregion
+
+        [NotMapped]
+        public DbSet<Mtto_gasto_centro_costo> uspAD_GastoMantenimientoCentroCosto { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_kardex_articulo> Inv_kardex_articulo { get; set; }
+        [NotMapped]
+        public DbSet<Inv_Insumo_SP_VM> Inv_Insumo_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inv_inventario_almacen_insumos_SP_VM> Inv_inventario_almacen_insumos_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inv_kardex_documento_SP_VM> Inv_kardex_documento { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_kardex_unidad_SP_VM> Inv_kardex_unidad { get; set; }
+        [NotMapped]
+        public DbSet<Compras_reporte_compras_SP_VM> Compras_reporte_compras { get; set; }
+        [NotMapped]
+        public DbSet<Mtto_reporte_mantenimiento_SP_VM> Mtto_reporte_mantenimiento_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inventario_reporte_consumo_combustible_SP_VM> Inventario_reporte_consumo_combustible_SP_VM { get; set; }
+
+        [NotMapped]
+        public DbSet<Compras_reporte_lotecompras_SP_VM> Compras_reporte_lotecompras { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_reporte_propio_consignacion_SP_VM> uspAD_ConsultaReporteInventarioPropioConsignacion { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_HistoricoPropioConsignacion_SP_VM> uspAD_ConsultaHistoricoPropioConsignacion { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_reporte_indicadores_patio_almacen_SP_VM> uspAD_ConsultaReporteIndicadoresPatioAlmacen { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_total_gastos_patio_SP_VM> uspAD_ConsultaTotalGastosXPatio { get; set; }
+
+        [NotMapped]
+        public DbSet<Inv_historico_requisiciones_gastos_SP_VM> uspAD_GeneraHistoricoRequisicionesGastos { get; set; }
+        [NotMapped]
+        public DbSet<Inv_total_gastos_historicos_centrocosto_SP_VM> uspAD_ConsultaTotalGastosCentrosCostoXPatio { get; set; }
+        [NotMapped]
+        public DbSet<Inv_reporte_razon_financiera_SP_VM> uspAD_ReporteRazonFinanciera { get; set; }
+        [NotMapped]
+        public DbSet<Contabilidad_proveedor_grafica_SP_VM> uspAD_MontoFacturaProveedor { get; set; }
+        [NotMapped]
+        public DbSet<Contabilidad_proveedor_grafica_pendiente_SP_VM> uspAD_MontoFacturaProveedorPendiente { get; set; }
+        
+        [NotMapped]
+        public DbSet<Inv_reporte_gastos_centrocostos_SP_VM> uspAD_ReporteGastosCentroCostosXConceptosCosto{ get; set; }
+        [NotMapped]
+        public DbSet<Inv_reporte_totalgastos_localidad_SP_VM> uspAD_ReporteTotalGastosLocalidadXConceptosCosto { get; set; }
+        [NotMapped]
+        public DbSet<Inventario_reporte_diesel_SP_VM> Inventario_reporte_diesel_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inv_inventario_almacen_lote_comprar_SP_VM> Inv_inventario_almacen_lote_comprar_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inventario_reporte_indicadores_SP_VM> Inventario_reporte_indicadores_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inventario_reporte_tractor_SP_VM> Inventario_reporte_tractor_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inventario_reporte_rango_medio_SP_VM> Inventario_reporte_rango_medio_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inventario_reporte_informacion_diesel_total_unidades_SP_VM> Inventario_reporte_informacion_diesel_total_unidades_SP_VM { get; set; }
+
+
+
+
+        [NotMapped]
+        public DbSet<ReporteThermoVM> Reporte_thermo_SP_VM { get; set; }
+        [NotMapped]
+        public DbSet<Inv_reporte_resumen_anual_SP_VM> Inv_reporte_resumen_anual_SP_VM { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            #region ORDEN
+            builder.Entity<Mtto_orden>().Property(x => x.CostoManoObra).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_orden>().Property(x => x.CostoTallerExterno).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_orden>().Property(x => x.CostoTallerExternoSubtotal).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region ORDEN DETALLE
+            builder.Entity<Mtto_orden_detalle>().Property(x => x.CostoRefaccion).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_orden_detalle>().Property(x => x.CostoTallerExterno).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_orden_detalle>().Property(x => x.CostoTallerExternoSubtotal).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region COMPONENTE FACTURA
+            builder.Entity<Mtto_componente_factura>().Property(x => x.CostoManoObra).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_componente_factura>().Property(x => x.CostoRefaccion).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_componente_factura>().Property(x => x.Subtotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_componente_factura>().Property(x => x.Iva).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_componente_factura>().Property(x => x.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Mtto_componente_factura>().Property(x => x.Descuento).HasColumnType("decimal(12,4)");
+
+
+            #endregion
+
+            #region TIPO MOTOR
+            builder.Entity<Mtto_cat_tipo_motor>().Property(x => x.Rendimiento).HasColumnType("decimal(5,2)");
+            builder.Entity<Mtto_cat_tipo_motor>().Property(x => x.RendimientoFull).HasColumnType("decimal(5,2)");
+            #endregion
+
+            #region INSUMO
+            builder.Entity<Inv_insumo>().HasIndex(x => x.Insumo).IsUnique();
+            #endregion
+
+            #region INVENTARIOS_ALMACEN
+
+            builder.Entity<Inv_inventario_almacen>().HasIndex(inva => new { inva.IdAlmacen, inva.IdEstadoInsumo, inva.IdInsumo }).IsUnique();
+
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Reorden).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Existencia).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Cantidad_minima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Cantidad_maxima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Costo_ultimo_compra).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(inva => inva.Total).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region INVENTARIO MAESTRO MOVIMIENTOS
+            builder.Entity<Inv_maestro_movimientos>().Property(inva => inva.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_maestro_movimientos>().Property(inva => inva.Existencia).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_maestro_movimientos>().Property(inva => inva.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_maestro_movimientos>().Property(inva => inva.PrecioPromedio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_maestro_movimientos>().Property(inva => inva.Total).HasColumnType("decimal(12,4)");
+            #endregion
+
+            #region COMPRAS
+
+            builder.Entity<Compras_solicitud_detalles>().Property(sd => sd.Cantidad_solicitada).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_solicitud_detalles>().Property(sd => sd.Cantidad_ordenada).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.OtrosGastos).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.Flete).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.Descuento).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.SubTotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.IVA).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.TotalIVA).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.Retencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.TotalRetencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_compra>().Property(sd => sd.TotalDescuento).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Cantidad_ordenada).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Descuento).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Precio_final).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Importe).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Cantidad_cancelada).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Cantidad_recibida).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.Cantidad_devuelta).HasColumnType("decimal(12,4)");
+            builder.Entity<Compras_orden_detalles>().Property(sd => sd.TotalDescuento).HasColumnType("decimal(12,4)");
+
+
+            #endregion
+
+            #region REPARACION
+
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.SubTotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.Flete).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.OtrosGastos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.TotalIVA).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.Retencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas>().Property(sd => sd.Descuento).HasColumnType("decimal(12,4)");
+
+
+            builder.Entity<Inv_entrada_partes_reparadas_detalle_otros>().Property(sd => sd.Costo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_reparadas_detalle_otros>().Property(sd => sd.CostoRefacciones).HasColumnType("decimal(12,4)");
+
+            #region InventarioRecepcionOrden
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.TipoCambio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.OtrosGastos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.Flete).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.Descuento).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.SubTotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.IVA).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.Retencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.TotalIVA).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(x => x.TotalRetencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_compra>().Property(sd => sd.TotalDescuento).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_recepcion_orden_detalle>().Property(x => x.Cantidad_recibida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_detalle>().Property(x => x.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_detalle>().Property(x => x.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_detalle>().Property(x => x.Cantidad_devuelta).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region Devolucion Proveedor
+            builder.Entity<Inv_devolucion_proveedores>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_devolucion_proveedor_detalle>().Property(sd => sd.Precio).HasColumnType("decimal(12,4)");
+            #endregion
+
+            #endregion
+
+            #region REQUISICION MATERIAL
+            builder.Entity<Inv_requisicion_material_detalle>().Property(sd => sd.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_material_detalle>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+
+            #endregion
+            #region REQUISICION ORDEN
+            builder.Entity<Inv_orden_requisicion>().Property(sd => sd.Costo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_orden_requisicion>().Property(sd => sd.CostoUnitario).HasColumnType("decimal(12,4)");
+
+
+            #endregion
+
+            #region Inventario Consumo Inmediato
+
+            builder.Entity<Inv_recepcion_consumo_inmediato_detalle>().Property(ci => ci.Cantidad_recibida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato_detalle>().Property(ci => ci.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato_detalle>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato_detalle>().Property(ci => ci.Cantidad_devuelta).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.OtrosGastos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.Flete).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.Retencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.IVA).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.TipoCambio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.Descuento).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.SubTotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.TotalIVA).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.TotalRetencion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato>().Property(ci => ci.TotalDescuento).HasColumnType("decimal(12,4)");
+
+
+            builder.Entity<Inv_recepcion_consumo_inmediato_devolucion_detalles>().Property(ci => ci.Cantidad_recibida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato_devolucion_detalles>().Property(ci => ci.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato_devolucion_detalles>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_consumo_inmediato_devolucion_detalles>().Property(ci => ci.Cantidad_devuelta).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region REQUISICION MATERIAL DEVOLUCION USUARIO
+            builder.Entity<Inv_requisicion_devolucion_usuario_detalle>().Property(sd => sd.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_devolucion_usuario_detalle>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region CONSIGNACION
+            builder.Entity<Inv_entrada_partes_consignacion_detalle>().Property(sd => sd.CostoEstandar).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_consignacion_movimiento>().Property(sd => sd.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_consignacion_movimiento>().Property(sd => sd.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_entrada_partes_consignacion_movimiento>().Property(sd => sd.CantidadPorContrato).HasColumnType("decimal(12,4)");
+
+
+
+            #endregion
+
+            #region Inventario Transferencia
+
+            builder.Entity<Inv_transferencia_salida_transferencia_detalle>().Property(ci => ci.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_transferencia_salida_transferencia_detalle>().Property(ci => ci.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_transferencia_salida_transferencia_detalle>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+
+
+            builder.Entity<Inv_transferencia_entrada_transferencia_detalle>().Property(et => et.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_transferencia_entrada_transferencia_detalle>().Property(et => et.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_transferencia_entrada_transferencia_detalle>().Property(et => et.Total).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_transferencia_devolucion_transferencia_detalle>().Property(dt => dt.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_transferencia_devolucion_transferencia_detalle>().Property(dt => dt.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_transferencia_devolucion_transferencia_detalle>().Property(dt => dt.Total).HasColumnType("decimal(12,4)");
+
+            #region LLANTAS MOVIMIENTOS
+            #endregion
+            builder.Entity<Inv_llantas_movimientos>().HasIndex(x => x.NumeroLlanta).IsUnique();
+            #endregion            
+
+            #region Proveedores
+            builder.Entity<Admin_cat_proveedores>().Property(ci => ci.IVA).HasColumnType("decimal(12,4)");
+            #endregion
+
+            #region Reportes            
+            builder.Entity<Inv_kardex_articulo>().HasNoKey();
+            //builder.Ignore(typeof(Inv_kardex_articulo));
+            builder.Entity<Inv_inventario_almacen_insumos_SP_VM>().HasNoKey();
+            //builder.Ignore(typeof(Inv_inventario_almacen_insumos_SP_VM));
+            builder.Entity<Inv_Insumo_SP_VM>().HasNoKey();
+            //builder.Ignore(typeof(Inv_Insumo_SP_VM));
+            builder.Entity<Mtto_gasto_centro_costo>().HasNoKey();
+            //builder.Ignore(typeof(Mtto_gasto_centro_costo));
+
+            builder.Entity<Inv_kardex_documento_SP_VM>().HasNoKey();
+            builder.Entity<Inv_kardex_unidad_SP_VM>().HasNoKey();
+            builder.Entity<Compras_reporte_compras_SP_VM>().HasNoKey();
+            builder.Entity<Mtto_reporte_mantenimiento_SP_VM>().HasNoKey();
+            builder.Entity<Compras_reporte_lotecompras_SP_VM>().HasNoKey();
+            builder.Entity<Inv_reporte_propio_consignacion_SP_VM>().HasNoKey();
+            builder.Entity<Inv_HistoricoPropioConsignacion_SP_VM>().HasNoKey();
+            builder.Entity<Inv_reporte_indicadores_patio_almacen_SP_VM>().HasNoKey();
+            builder.Entity<Inv_total_gastos_patio_SP_VM>().HasNoKey();
+            builder.Entity<Inv_historico_requisiciones_gastos_SP_VM>().HasNoKey();
+            builder.Entity<Inv_total_gastos_historicos_centrocosto_SP_VM>().HasNoKey();
+            builder.Entity<Inv_reporte_razon_financiera_SP_VM>().HasNoKey();
+            builder.Entity<Inv_reporte_gastos_centrocostos_SP_VM>().HasNoKey();
+            builder.Entity<Inv_reporte_totalgastos_localidad_SP_VM>().HasNoKey();
+            builder.Entity<ReporteThermoVM>().HasNoKey();
+            builder.Entity<Inventario_reporte_informacion_diesel_total_unidades_SP_VM>().HasNoKey();
+            builder.Entity<Inv_reporte_resumen_anual_SP_VM>().HasNoKey();
+
+            
+
+
+            #endregion
+
+            #region Inventario Recepcion Orden Devolucion
+
+            builder.Entity<Inv_recepcion_orden_devolucion_detalle>().Property(ci => ci.Cantidad_recibida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_devolucion_detalle>().Property(ci => ci.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_devolucion_detalle>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_recepcion_orden_devolucion_detalle>().Property(ci => ci.Cantidad_devuelta).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region FACTURA CONSIGNACION
+            builder.Entity<Inv_factura_consignacion>().Property(sd => sd.Subtotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_factura_consignacion>().Property(sd => sd.MontoIva).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_factura_consignacion>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_factura_consignacion_detalle>().Property(sd => sd.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_factura_consignacion_detalle>().Property(sd => sd.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_factura_consignacion_detalle>().Property(sd => sd.Cantidad).HasColumnType("decimal(12,4)");
+
+
+            #endregion
+            #region REQUISICION COMBUSTIBLE
+            builder.Entity<Inv_requisicion_combustible_detalle>().Property(x => x.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_combustible_detalle>().Property(x => x.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_combustible_detalle>().Property(x => x.CantidadDespachada).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_combustible>().Property(x => x.Kilometraje).HasColumnType("decimal(12,4)");
+
+
+            #endregion
+            #region REQUISICION COMBUSTIBLE DEVOLUCION
+            builder.Entity<Inv_requisicion_combustible_devolucion_detalle>().Property(x => x.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_combustible_devolucion_detalle>().Property(x => x.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_combustible_devolucion_detalle>().Property(x => x.Cantidad).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region InventarioHistorico
+
+            builder.Entity<Inv_historico_propios_consignacion>().Property(sd => sd.SumaTotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_historico_requisicion_gastos>().Property(hr => hr.Total).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+            #region DISPERSION EXTERNA GASOLINERA
+            builder.Entity<Inv_requisicion_dispersion_externa_combustible>().Property(x => x.CostoUnitario).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_dispersion_externa_combustible>().Property(x => x.CostoTotal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_dispersion_externa_combustible>().Property(x => x.IngresoLitros).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_dispersion_externa_combustible>().Property(x => x.Kilometraje).HasColumnType("decimal(12,4)");
+
+
+
+
+            #endregion
+
+            builder.Entity<Inv_entrada_partes_consignacion_movimiento>().Property(ci => ci.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_inventario_almacen>().Property(ci => ci.Consignacion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_orden_requisicion>().Property(ci => ci.CantidadSurtida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_orden_requisicion>().Property(ci => ci.CantidadDevuelta).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_material_detalle>().Property(ci => ci.CantidadSurtida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_requisicion_devolucion_usuario_detalle>().Property(ci => ci.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_devolucion_a_consignatario_detalle>().Property(ci => ci.Cantidad).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_Inventario_almacen_maximos_minimos_historico>().Property(ci => ci.Maxima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_Inventario_almacen_maximos_minimos_historico>().Property(ci => ci.Minima).HasColumnType("decimal(12,4)");
+
+            #region Ajuste_Positivo_Negativo
+            builder.Entity<Inv_ajuste_negativo_detalle>().Property(ci => ci.CantidadSurtida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_ajuste_negativo_detalle>().Property(ci => ci.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_ajuste_negativo_detalle>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_ajuste_positivo>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_ajuste_positivo_detalle>().Property(ci => ci.Cantidad_recibida).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_ajuste_positivo_detalle>().Property(ci => ci.Precio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_ajuste_positivo_detalle>().Property(ci => ci.Total).HasColumnType("decimal(12,4)");
+
+            #endregion
+
+
+
+            #region tracto e indicador unidad
+            //Inv_tracto
+            builder.Entity<Inv_tracto>().Property(sd => sd.LitrosDiesel).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.LitrosUrea).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.LitrosReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.RendReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.KmsReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.RendGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.LtsFaltaReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.KmsOdo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.KmsDif).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.PorcentajeDifLts).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.DifAjustado).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.RedReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.DifRend).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_tracto>().Property(sd => sd.Distance).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.Fuel).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.FuelEconomy).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.TotalEngineDistance).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.TotalFuelUsed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.OtrasRecargas).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_tracto>().Property(sd => sd.Rendimiendo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.RpmMaxima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.VelMaxima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.UltimoCambio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.CargaMotor).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.Ralenti).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.FrenoPanicoCalificacion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.NeutralizadaCalificacion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_tracto>().Property(sd => sd.PromedioParcial).HasColumnType("decimal(12,4)");
+
+
+
+
+
+            //Inv_indicador_unidad
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.LitrosUrea).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.LitrosReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.RendReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.KmsReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.RendGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.LtsFaltaReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.KmsOdo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.KmsDif).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.PorcentajeDifLts).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.KmsRecorridos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.RedReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.DifKm).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.DifRend).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.Porcentaje).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.DifAjustada).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.OtrasRecargas).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.OtrasGas).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.DifKms).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.MaximumVehicleSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.MaximumEngineSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.AverageEngineSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.AverageVehicleSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.AverageEngineLoadCarga).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.ServiceBrakeActuations1K).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.DieselExhaustFluidUsedDEF).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.FrenoPanico).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.Nuetralizada).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.PtoLts).HasColumnType("decimal(12,4)");
+
+
+
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.Rendimiendo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.RpmMaxima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.VelMaxima).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.UltimoCambio).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.CargaMotor).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.Ralenti).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.FrenoPanicoCalificacion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.NeutralizadaCalificacion).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad>().Property(sd => sd.PromedioParcial).HasColumnType("decimal(12,4)");
+
+
+
+
+
+            //carga inicialial
+            builder.Entity<Inv_carga_inicial_reseteo_calculos>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_carga_inicial_reseteo_calculos>().Property(sd => sd.TotalFuelUsedInicial).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_carga_inicial_reseteo_calculos>().Property(sd => sd.TotalEngineDistanceInicial).HasColumnType("decimal(12,4)");
+
+
+            //reporte resumen anual
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.KilometrajeInicial).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.KilometrajeFinal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.KilometrosRecorridos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.Litros).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.RendimientoGeneral).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.RendimientoSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.KilometrosSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.LitrosSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.LtsResetVsLtsGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.KmsResetVHodometros).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.LitrosUrea).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.DieselExhaustFluidUsedDEF).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.TotalNumberofSuddenDecelNeutralizada).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.NumberofCoastsOutofGearFrenadaPanico).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.MaximumVehicleSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.AverageVehicleSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.MaximumEngineSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.AverageEngineSpeed).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.AverageEngineLoadCarga).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.ServiceBrakeActuations1K).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.Recargas).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.Reset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.RecVsReset).HasColumnType("decimal(12,4)");
+
+
+
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.OtrasRecargas).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.HoraTrabajoMotorInicial).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.HoraTrabajoMotorFinal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_resumen_anual>().Property(sd => sd.HorasTrabajoMotor).HasColumnType("decimal(12,4)");
+     
+
+
+
+
+
+
+
+
+            #endregion
+
+
+            #region
+            //Inv_thermo
+            builder.Entity<Inv_thermo>().Property(sd => sd.LitrosDiesel).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_thermo>().Property(sd => sd.HorasTrabajoMotor).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_thermo>().Property(sd => sd.LtSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_thermo>().Property(sd => sd.RendimientoSinGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_thermo>().Property(sd => sd.HoraInicialMotor).HasColumnType("decimal(12,4)");
+
+
+            //Inv_indicador_unidad_thermo
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.HorasTrabajoMotor).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.LitrosUrea).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.LtSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.RendimientoSinGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.HoraInicialMotor).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.HoraFinalMotor).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.HoraMotorTrabajada).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.DieselEnCasa).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.OtrasGas).HasColumnType("decimal(12,4)");
+
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.RendReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.KilometrajeSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_thermo>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+
+
+        //Inv_carga_inicial_thermo_calculos
+        builder.Entity<Inv_carga_inicial_thermo_calculos>().Property(sd => sd.HorasTrabajoMotor).HasColumnType("decimal(12,4)");
+
+
+
+
+            //Inv_rango_m
+            builder.Entity<Inv_rango_m>().Property(sd => sd.LitrosDiesel).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.LitrosUrea).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.LtSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.RendReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.KilometrejeSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.RendimientoSinGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.LitrosSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.KMmSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.ResetVsGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.KilomInicial).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.KilomFinal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.KmsRecorridos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.GasCasa).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.OtrasGas).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.RedReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.DifKM).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.TripFuelUsedForDosing).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_rango_m>().Property(sd => sd.OtrasRecargas).HasColumnType("decimal(12,4)");
+
+
+
+
+            //Inv_indicador_unidad_rango_m
+
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.LtSegunReseteo).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.RendReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.KilometrejeSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.RendimientoSinGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.LitrosSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.KMmSinReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.ResetVsGasto).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.KilomInicial).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.KilomFinal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.KmsRecorridos).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.GasCasa).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.OtroGas).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.RedReset).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.DifKM).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.Porcentaje).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.DifRend).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_indicador_unidad_rango_m>().Property(sd => sd.DifKms).HasColumnType("decimal(12,4)");
+
+
+            
+            //Inv_carga_inicial_rango_m_calculos
+            builder.Entity<Inv_carga_inicial_rango_m_calculos>().Property(sd => sd.Odometro).HasColumnType("decimal(12,4)");
+
+
+            //configuracion parametros combustible
+            builder.Entity<Inv_parametros_configuracion_combustible>().Property(sd => sd.ParametroInicial).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_parametros_configuracion_combustible>().Property(sd => sd.ParametroFinal).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_parametros_configuracion_combustible>().Property(sd => sd.ParametroInicialDifAjustada).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_parametros_configuracion_combustible>().Property(sd => sd.ParametroFinalDifAjustada).HasColumnType("decimal(12,4)");
+
+
+            //configuracion parametros Inv_calificacion_unidad_configuracion
+            builder.Entity<Inv_calificacion_unidad_configuracion>().Property(sd => sd.Valor).HasColumnType("decimal(12,4)");
+            builder.Entity<Inv_calificacion_unidad_configuracion>().Property(sd => sd.Calificacion).HasColumnType("decimal(12,4)");
+
+            //configuracion parametros Inv_parametros_configuracion_combustible
+
+            builder.Entity<Inv_parametros_configuracion_combustible>().Property(sd => sd.OdometroInicialHistorico).HasColumnType("decimal(12,4)");
+
+            
+            #endregion
+
+            base.OnModelCreating(builder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (Helpers.EnvironmentName().Equals(EnvironmentName.Development.ToString()))
+            {
+                optionsBuilder.EnableSensitiveDataLogging();
+
+                optionsBuilder.UseSqlServer(_connectionString);
+                optionsBuilder.UseLoggerFactory(_loggerContext);
+            }
+        }
+    }
+}
